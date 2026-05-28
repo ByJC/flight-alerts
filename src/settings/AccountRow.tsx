@@ -22,8 +22,8 @@ export function AccountRow({
         />
         Enabled
       </label>
-      <button onClick={onRemove}>Remove</button>
       <button onClick={onTest}>Test</button>
+      <button onClick={onRemove}>Remove</button>
     </div>
   );
 }
