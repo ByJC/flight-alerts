@@ -20,6 +20,9 @@ export default defineConfig({
     },
   },
   renderer: {
+    // electron-vite defaults renderer.root to src/renderer; override to project root
+    // so Vite's dev server serves src/settings/ and src/overlay/ correctly.
+    root: __dirname,
     plugins: [react()],
     build: {
       outDir: 'out/renderer',
