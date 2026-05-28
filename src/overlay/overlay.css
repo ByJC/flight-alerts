@@ -1,8 +1,8 @@
 :root {
-  --lane-top: 28px;
-  --lane-spacing: 60px;
-  --plane-height: 44px;
-  --animation-duration: 6s;
+  --lane-top: 32px;
+  --lane-spacing: 80px;
+  --plane-height: 60px;
+  --animation-duration: 10s;
 }
 
 html, body {
@@ -30,25 +30,25 @@ html, body {
   user-select: none;
 }
 
-.plane .glyph { font-size: 32px; line-height: 1; margin-right: 6px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
+.plane .glyph { font-size: 48px; line-height: 1; margin-right: 10px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35)); }
 
 .plane .banner {
   background: var(--color);
   color: #111;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font: 600 13px/1 -apple-system, BlinkMacSystemFont, sans-serif;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font: 600 17px/1.1 -apple-system, BlinkMacSystemFont, sans-serif;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
 .plane .banner .acct {
   font-weight: 400;
   opacity: 0.75;
-  margin-left: 6px;
-  font-size: 11px;
+  margin-left: 10px;
+  font-size: 14px;
 }
 
 @keyframes fly {
-  from { transform: translateX(-260px); }
-  to   { transform: translateX(calc(100vw + 40px)); }
+  from { transform: translateX(-360px); }
+  to   { transform: translateX(calc(100vw + 80px)); }
 }

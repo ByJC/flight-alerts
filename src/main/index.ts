@@ -14,7 +14,7 @@ import type { Config, NormalizedEvent } from './types';
 
 const CONFIG_PATH = join(app.getPath('userData'), 'config.json');
 const SYNC_INTERVAL_MS = 5 * 60_000;
-const ANIMATION_MS = 6000;
+const ANIMATION_MS = 10000;
 const MAX_LANES = 5;
 
 let config: Config;
