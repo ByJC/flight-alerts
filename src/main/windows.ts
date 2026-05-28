@@ -53,7 +53,10 @@ export function createSettingsWindow(): BrowserWindow {
       nodeIntegration: false,
     },
   });
-  win.on('ready-to-show', () => win.show());
+  win.on('ready-to-show', () => {
+    win.show();
+    if (isDev) win.webContents.openDevTools({ mode: 'detach' });
+  });
   loadRenderer(win, 'settings');
   return win;
 }
