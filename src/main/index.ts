@@ -1,7 +1,15 @@
 import { app, BrowserWindow, shell, powerMonitor, Notification } from 'electron';
 import { join } from 'node:path';
-import 'dotenv/config';
+import { config as dotenvConfig } from 'dotenv';
 import { logger } from './logger';
+
+// Dev: dotenv reads .env from cwd (the project root).
+// Packaged: .env is bundled inside Contents/Resources via electron-builder extraResources.
+if (app.isPackaged) {
+  dotenvConfig({ path: join(process.resourcesPath, '.env') });
+} else {
+  dotenvConfig();
+}
 import { loadConfig, saveConfig } from './storage';
 import { AccountManager } from './account-manager';
 import { fetchAccountEvents } from './calendar-sync';

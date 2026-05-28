@@ -46,13 +46,19 @@
       "assets/**/*",
       "package.json"
     ],
+    "extraResources": [
+      { "from": ".env", "to": ".env" }
+    ],
     "mac": {
       "category": "public.app-category.productivity",
-      "target": [{ "target": "dmg", "arch": ["arm64", "x64"] }],
-      "icon": "assets/icon.icns",
+      "target": [{ "target": "dmg", "arch": ["arm64"] }],
+      "identity": null,
       "extendInfo": {
         "LSUIElement": true
       }
+    },
+    "dmg": {
+      "writeUpdateInfo": false
     }
   }
 }
