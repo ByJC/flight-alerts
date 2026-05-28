@@ -1,0 +1,54 @@
+:root {
+  --lane-top: 28px;
+  --lane-spacing: 60px;
+  --plane-height: 44px;
+  --animation-duration: 6s;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  -webkit-app-region: no-drag;
+}
+
+#lanes { position: absolute; inset: 0; pointer-events: none; }
+
+.plane {
+  position: absolute;
+  height: var(--plane-height);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  pointer-events: auto;
+  animation: fly var(--animation-duration) linear forwards;
+  will-change: transform;
+  cursor: pointer;
+  user-select: none;
+}
+
+.plane .glyph { font-size: 32px; line-height: 1; margin-right: 6px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
+
+.plane .banner {
+  background: var(--color);
+  color: #111;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font: 600 13px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.plane .banner .acct {
+  font-weight: 400;
+  opacity: 0.75;
+  margin-left: 6px;
+  font-size: 11px;
+}
+
+@keyframes fly {
+  from { transform: translateX(-260px); }
+  to   { transform: translateX(calc(100vw + 40px)); }
+}
