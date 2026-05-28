@@ -56,6 +56,10 @@ export class FlightScheduler {
     this.scheduled.set(e.id, { event: e, timeout: handle });
   }
 
+  setDelayMs(ms: number): void {
+    this.opts.delayMs = ms;
+  }
+
   dispose(): void {
     for (const { timeout } of this.scheduled.values()) clearTimeout(timeout);
     this.scheduled.clear();

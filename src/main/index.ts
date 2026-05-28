@@ -79,7 +79,7 @@ function openSettings(): void {
 
 async function init(): Promise<void> {
   config = loadConfig(CONFIG_PATH);
-  scheduler['opts'].delayMs = config.delayMinutes * 60_000;
+  scheduler.setDelayMs(config.delayMinutes * 60_000);
 
   overlay = createOverlayWindow();
   createTray({
@@ -93,7 +93,7 @@ async function init(): Promise<void> {
     updateConfig: (c) => {
       config = c;
       saveConfig(CONFIG_PATH, c);
-      scheduler['opts'].delayMs = c.delayMinutes * 60_000;
+      scheduler.setDelayMs(c.delayMinutes * 60_000);
       app.setLoginItemSettings({ openAtLogin: c.autostart });
       syncOnce();
     },
