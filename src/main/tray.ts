@@ -12,6 +12,8 @@ export function createTray(handlers: TrayHandlers): Tray {
   icon.setTemplateImage(true);
   const tray = new Tray(icon.isEmpty() ? nativeImage.createEmpty() : icon);
   tray.setToolTip('Flight Alerts');
+  // Until a real trayTemplate.png is shipped, show a glyph so the icon is visible in the menubar.
+  if (icon.isEmpty()) tray.setTitle('✈');
 
   const rebuild = () => {
     const menu = Menu.buildFromTemplate([
