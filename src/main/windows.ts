@@ -5,9 +5,12 @@ const isDev = !!process.env['ELECTRON_RENDERER_URL'];
 
 function loadRenderer(win: BrowserWindow, name: 'settings' | 'overlay'): void {
   if (isDev) {
-    win.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/${name}/index.html`);
+    // Vite dev server serves files at their original filesystem path (relative to project root).
+    // Our HTML entries live at src/<name>/index.html.
+    win.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/src/${name}/index.html`);
   } else {
-    win.loadFile(join(__dirname, `../renderer/${name}/index.html`));
+    // Production: matches the rollup output structure (preserves source dirs).
+    win.loadFile(join(__dirname, `../renderer/src/${name}/index.html`));
   }
 }
 
