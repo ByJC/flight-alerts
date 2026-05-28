@@ -8,6 +8,7 @@ export interface AccountConfig {
 
 export interface Config {
   delayMinutes: number;
+  dismissSeconds: number; // upper bound on how long a plane stays visible (acts as safety + future hover-pause)
   autostart: boolean;
   accounts: AccountConfig[];
 }
@@ -29,6 +30,7 @@ export interface PlaneSpawnPayload {
   color: string;
   htmlLink: string;
   lane: number;
+  dismissMs: number;
 }
 
 export interface OAuthTokens {

@@ -1,7 +1,5 @@
 import type { PlaneSpawnPayload } from '../main/types';
 
-const AUTO_DISMISS_MS = 30_000;
-
 const lanesEl = document.getElementById('lanes')!;
 const planes: HTMLElement[] = [];
 
@@ -36,34 +34,31 @@ function spawnPlane(p: PlaneSpawnPayload): void {
 
   el.append(glyph, banner, close);
 
-  let dismissed = false;
-  const dismiss = () => {
-    if (dismissed) return;
-    dismissed = true;
-    clearTimeout(autoTimer);
-    el.classList.add('exit');
+  let removed = false;
+  const remove = () => {
+    if (removed) return;
+    removed = true;
+    clearTimeout(safetyTimer);
+    el.remove();
+    const idx = planes.indexOf(el);
+    if (idx >= 0) planes.splice(idx, 1);
+    window.overlay.releaseLane(p.lane);
   };
 
   const openEvent = () => {
     if (p.htmlLink) window.overlay.openExternal(p.htmlLink);
-    dismiss();
+    remove();
   };
 
   glyph.addEventListener('click', (e) => { e.stopPropagation(); openEvent(); });
   banner.addEventListener('click', (e) => { e.stopPropagation(); openEvent(); });
-  close.addEventListener('click', (e) => { e.stopPropagation(); dismiss(); });
+  close.addEventListener('click', (e) => { e.stopPropagation(); remove(); });
 
-  const autoTimer = setTimeout(dismiss, AUTO_DISMISS_MS);
+  el.addEventListener('animationend', remove);
 
-  el.addEventListener('animationend', (ev) => {
-    // Only the exit animation removes the element; entry just settles into resting position.
-    if ((ev as AnimationEvent).animationName === 'exit') {
-      el.remove();
-      const idx = planes.indexOf(el);
-      if (idx >= 0) planes.splice(idx, 1);
-      window.overlay.releaseLane(p.lane);
-    }
-  });
+  // Safety: even if the CSS animation never fires animationend (paused tab,
+  // weird repaint), force-remove after dismissMs.
+  const safetyTimer = setTimeout(remove, p.dismissMs);
 
   lanesEl.appendChild(el);
   planes.push(el);

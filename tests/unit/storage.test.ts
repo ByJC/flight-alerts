@@ -23,9 +23,15 @@ describe('storage', () => {
   });
 
   it('round-trips a valid config', () => {
-    const cfg = { delayMinutes: 10, autostart: false, accounts: [{ email: 'a@b.com', color: '#ff0000', enabled: true }] };
+    const cfg = { delayMinutes: 10, dismissSeconds: 30, autostart: false, accounts: [{ email: 'a@b.com', color: '#ff0000', enabled: true }] };
     saveConfig(path, cfg);
     expect(loadConfig(path)).toEqual(cfg);
+  });
+
+  it('applies default dismissSeconds when missing from file (forward-compat)', () => {
+    writeFileSync(path, JSON.stringify({ delayMinutes: 10, autostart: true, accounts: [] }));
+    const cfg = loadConfig(path);
+    expect(cfg.dismissSeconds).toBe(20);
   });
 
   it('falls back to defaults and writes .bak on corrupt JSON', () => {
@@ -44,7 +50,7 @@ describe('storage', () => {
   });
 
   it('writes atomically (no partial file on crash simulation)', () => {
-    const cfg = { delayMinutes: 5, autostart: true, accounts: [] };
+    const cfg = { delayMinutes: 5, dismissSeconds: 20, autostart: true, accounts: [] };
     saveConfig(path, cfg);
     expect(existsSync(path + '.tmp')).toBe(false);
   });

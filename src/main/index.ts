@@ -61,6 +61,7 @@ function spawnPlane(event: NormalizedEvent): void {
     color: colorFor(event.accountEmail),
     htmlLink: event.htmlLink,
     lane,
+    dismissMs: config.dismissSeconds * 1000,
   });
   if (delayMs > 0) setTimeout(send, delayMs); else send();
 }

@@ -68,6 +68,15 @@ export function App() {
           before each event
         </label>
         <label>
+          Dismiss plane after{' '}
+          <select
+            value={config.dismissSeconds}
+            onChange={(e) => update({ ...config, dismissSeconds: Number(e.target.value) })}
+          >
+            {[10, 20, 30, 60, 120].map((n) => <option key={n} value={n}>{n}s</option>)}
+          </select>
+        </label>
+        <label>
           <input
             type="checkbox"
             checked={config.autostart}

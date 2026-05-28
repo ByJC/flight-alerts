@@ -2,8 +2,7 @@
   --lane-top: 32px;
   --lane-spacing: 80px;
   --plane-height: 60px;
-  --entry-duration: 3s;
-  --exit-duration: 0.4s;
+  --animation-duration: 10s;
 }
 
 html, body {
@@ -20,19 +19,14 @@ html, body {
 
 .plane {
   position: absolute;
-  left: 24px;
   height: var(--plane-height);
   display: flex;
   align-items: center;
   white-space: nowrap;
   pointer-events: auto;
-  animation: entry var(--entry-duration) cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  will-change: transform, opacity;
+  animation: fly var(--animation-duration) linear forwards;
+  will-change: transform;
   user-select: none;
-}
-
-.plane.exit {
-  animation: exit var(--exit-duration) ease-in forwards;
 }
 
 .plane .glyph {
@@ -80,12 +74,7 @@ html, body {
   background: rgba(0, 0, 0, 0.75);
 }
 
-@keyframes entry {
-  from { transform: translateX(calc(100vw - 24px)); }
-  to   { transform: translateX(0); }
-}
-
-@keyframes exit {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(-60px); }
+@keyframes fly {
+  from { transform: translateX(-360px); }
+  to   { transform: translateX(calc(100vw + 80px)); }
 }
