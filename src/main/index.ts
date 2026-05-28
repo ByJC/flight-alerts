@@ -23,11 +23,12 @@ let settingsWin: BrowserWindow | null = null;
 let paused = false;
 
 const clientId = process.env['GOOGLE_CLIENT_ID'];
-if (!clientId) {
-  logger.error('GOOGLE_CLIENT_ID env var is required. See .env.example.');
+const clientSecret = process.env['GOOGLE_CLIENT_SECRET'];
+if (!clientId || !clientSecret) {
+  logger.error('GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET env vars are required. See .env.example.');
   app.quit();
 }
-const accountManager = new AccountManager(clientId!);
+const accountManager = new AccountManager(clientId!, clientSecret!);
 const lanes = new LaneAllocator({ animationMs: ANIMATION_MS, maxLanes: MAX_LANES });
 const scheduler = new FlightScheduler({
   delayMs: 5 * 60_000, // overwritten in init() below

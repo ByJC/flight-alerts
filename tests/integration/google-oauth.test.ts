@@ -3,6 +3,7 @@ import nock from 'nock';
 import { exchangeCodeForTokens, refreshAccessToken, buildAuthUrl, makePkcePair } from '../../src/main/google-oauth';
 
 const CLIENT_ID = 'test-client.apps.googleusercontent.com';
+const CLIENT_SECRET = 'GOCSPX-test-secret';
 const REDIRECT = 'http://127.0.0.1:55555/callback';
 
 beforeEach(() => { nock.disableNetConnect(); });
@@ -33,6 +34,7 @@ describe('google-oauth', () => {
     nock('https://oauth2.googleapis.com')
       .post('/token', (body) => {
         return body.client_id === CLIENT_ID &&
+               body.client_secret === CLIENT_SECRET &&
                body.code === 'auth-code' &&
                body.code_verifier === 'verifier-123' &&
                body.grant_type === 'authorization_code' &&
@@ -41,7 +43,7 @@ describe('google-oauth', () => {
       .reply(200, { access_token: 'at', refresh_token: 'rt', expires_in: 3600 });
 
     const tokens = await exchangeCodeForTokens({
-      clientId: CLIENT_ID, code: 'auth-code', verifier: 'verifier-123', redirectUri: REDIRECT,
+      clientId: CLIENT_ID, clientSecret: CLIENT_SECRET, code: 'auth-code', verifier: 'verifier-123', redirectUri: REDIRECT,
     });
     expect(tokens.accessToken).toBe('at');
     expect(tokens.refreshToken).toBe('rt');
@@ -50,10 +52,10 @@ describe('google-oauth', () => {
 
   it('refreshAccessToken returns a new access token and preserves the refresh token', async () => {
     nock('https://oauth2.googleapis.com')
-      .post('/token', (b) => b.grant_type === 'refresh_token' && b.refresh_token === 'rt')
+      .post('/token', (b) => b.grant_type === 'refresh_token' && b.refresh_token === 'rt' && b.client_secret === CLIENT_SECRET)
       .reply(200, { access_token: 'at-new', expires_in: 3600 });
 
-    const tokens = await refreshAccessToken({ clientId: CLIENT_ID, refreshToken: 'rt' });
+    const tokens = await refreshAccessToken({ clientId: CLIENT_ID, clientSecret: CLIENT_SECRET, refreshToken: 'rt' });
     expect(tokens.accessToken).toBe('at-new');
     expect(tokens.refreshToken).toBe('rt');
   });
@@ -61,7 +63,7 @@ describe('google-oauth', () => {
   it('throws on token endpoint error', async () => {
     nock('https://oauth2.googleapis.com').post('/token').reply(400, { error: 'invalid_grant' });
     await expect(
-      refreshAccessToken({ clientId: CLIENT_ID, refreshToken: 'rt' }),
+      refreshAccessToken({ clientId: CLIENT_ID, clientSecret: CLIENT_SECRET, refreshToken: 'rt' }),
     ).rejects.toThrow(/invalid_grant/);
   });
 });

@@ -76,14 +76,20 @@ function postToken(body: Record<string, string>): Promise<any> {
   });
 }
 
+// Google requires `client_secret` even for Desktop OAuth clients with PKCE — it's
+// considered "public" for installed apps but the parameter must be present.
+// See https://developers.google.com/identity/protocols/oauth2/native-app#exchange-authorization-code
+
 export async function exchangeCodeForTokens(opts: {
   clientId: string;
+  clientSecret: string;
   code: string;
   verifier: string;
   redirectUri: string;
 }): Promise<OAuthTokens> {
   const j = await postToken({
     client_id: opts.clientId,
+    client_secret: opts.clientSecret,
     code: opts.code,
     code_verifier: opts.verifier,
     grant_type: 'authorization_code',
@@ -98,10 +104,12 @@ export async function exchangeCodeForTokens(opts: {
 
 export async function refreshAccessToken(opts: {
   clientId: string;
+  clientSecret: string;
   refreshToken: string;
 }): Promise<OAuthTokens> {
   const j = await postToken({
     client_id: opts.clientId,
+    client_secret: opts.clientSecret,
     refresh_token: opts.refreshToken,
     grant_type: 'refresh_token',
   });

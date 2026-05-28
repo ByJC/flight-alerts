@@ -10,7 +10,10 @@ export interface AddAccountResult {
 }
 
 export class AccountManager {
-  constructor(private readonly clientId: string) {}
+  constructor(
+    private readonly clientId: string,
+    private readonly clientSecret: string,
+  ) {}
 
   async addAccount(): Promise<AddAccountResult> {
     const { verifier, challenge } = makePkcePair();
@@ -24,7 +27,13 @@ export class AccountManager {
 
     try {
       const code = await codePromise;
-      const tokens = await exchangeCodeForTokens({ clientId: this.clientId, code, verifier, redirectUri });
+      const tokens = await exchangeCodeForTokens({
+        clientId: this.clientId,
+        clientSecret: this.clientSecret,
+        code,
+        verifier,
+        redirectUri,
+      });
       const email = await this.fetchEmail(tokens.accessToken);
       await saveTokens(email, tokens);
       return { email };
@@ -47,7 +56,11 @@ export class AccountManager {
     const tokens = await loadTokens(email);
     if (!tokens) throw new Error(`No tokens for ${email}`);
     if (tokens.expiresAt > Date.now()) return tokens.accessToken;
-    const fresh = await refreshAccessToken({ clientId: this.clientId, refreshToken: tokens.refreshToken });
+    const fresh = await refreshAccessToken({
+      clientId: this.clientId,
+      clientSecret: this.clientSecret,
+      refreshToken: tokens.refreshToken,
+    });
     await saveTokens(email, fresh);
     return fresh.accessToken;
   }
