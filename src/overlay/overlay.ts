@@ -54,10 +54,8 @@ function spawnPlane(p: PlaneSpawnPayload): void {
   banner.addEventListener('click', (e) => { e.stopPropagation(); openEvent(); });
   close.addEventListener('click', (e) => { e.stopPropagation(); remove(); });
 
-  el.addEventListener('animationend', remove);
-
-  // Safety: even if the CSS animation never fires animationend (paused tab,
-  // weird repaint), force-remove after dismissMs.
+  // Plane flies in, then rests at the right edge until the user dismisses it
+  // OR dismissMs elapses (counted from spawn — covers the full visible time).
   const safetyTimer = setTimeout(remove, p.dismissMs);
 
   lanesEl.appendChild(el);

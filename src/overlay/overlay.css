@@ -19,6 +19,9 @@ html, body {
 
 .plane {
   position: absolute;
+  /* Anchored against the right edge; the `fly` animation slides it in from
+     off-screen left and rests it here once it lands. */
+  right: 24px;
   height: var(--plane-height);
   display: flex;
   align-items: center;
@@ -75,6 +78,6 @@ html, body {
 }
 
 @keyframes fly {
-  from { transform: translateX(-360px); }
-  to   { transform: translateX(calc(100vw + 80px)); }
+  from { transform: translateX(calc(-100vw - 24px)); }
+  to   { transform: translateX(0); }
 }
