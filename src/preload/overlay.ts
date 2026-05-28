@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('overlay', {
     ipcRenderer.on('plane:spawn', (_e, p: PlaneSpawnPayload) => cb(p));
   },
   setMouseCapture: (capture: boolean) => ipcRenderer.send('overlay:mouse-capture', capture),
+  releaseLane: (lane: number) => ipcRenderer.send('overlay:release-lane', lane),
   openExternal: (url: string): Promise<void> => ipcRenderer.invoke('shell:open', url),
 });

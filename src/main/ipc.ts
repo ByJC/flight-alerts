@@ -8,6 +8,7 @@ export interface IpcHandlers {
   removeAccount: (email: string) => Promise<void>;
   testPlane: (email: string) => void;
   setOverlayMouseCapture: (capture: boolean) => void;
+  releaseLane: (lane: number) => void;
   openExternal: (url: string) => Promise<void>;
 }
 
@@ -18,6 +19,7 @@ export function registerIpc(h: IpcHandlers): void {
   ipcMain.handle('account:remove', (_e, email: string) => h.removeAccount(email));
   ipcMain.handle('account:test', (_e, email: string) => h.testPlane(email));
   ipcMain.on('overlay:mouse-capture', (_e, capture: boolean) => h.setOverlayMouseCapture(capture));
+  ipcMain.on('overlay:release-lane', (_e, lane: number) => h.releaseLane(lane));
   ipcMain.handle('shell:open', (_e, url: string) => h.openExternal(url));
 }
 

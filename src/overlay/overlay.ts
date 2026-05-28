@@ -1,5 +1,7 @@
 import type { PlaneSpawnPayload } from '../main/types';
 
+const AUTO_DISMISS_MS = 30_000;
+
 const lanesEl = document.getElementById('lanes')!;
 const planes: HTMLElement[] = [];
 
@@ -17,7 +19,6 @@ function spawnPlane(p: PlaneSpawnPayload): void {
   el.className = 'plane';
   el.style.top = `calc(var(--lane-top) + ${p.lane} * var(--lane-spacing))`;
   el.style.setProperty('--color', p.color);
-  el.dataset['url'] = p.htmlLink;
 
   const glyph = document.createElement('span');
   glyph.className = 'glyph';
@@ -27,14 +28,41 @@ function spawnPlane(p: PlaneSpawnPayload): void {
   banner.className = 'banner';
   banner.innerHTML = `${formatTime(p.startMs)} — ${escapeHtml(p.title)}<span class="acct">${escapeHtml(p.accountEmail)}</span>`;
 
-  el.append(glyph, banner);
-  el.addEventListener('click', () => {
+  const close = document.createElement('span');
+  close.className = 'close';
+  close.textContent = '×';
+  close.setAttribute('role', 'button');
+  close.setAttribute('aria-label', 'Dismiss');
+
+  el.append(glyph, banner, close);
+
+  let dismissed = false;
+  const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
+    clearTimeout(autoTimer);
+    el.classList.add('exit');
+  };
+
+  const openEvent = () => {
     if (p.htmlLink) window.overlay.openExternal(p.htmlLink);
-  });
-  el.addEventListener('animationend', () => {
-    el.remove();
-    const idx = planes.indexOf(el);
-    if (idx >= 0) planes.splice(idx, 1);
+    dismiss();
+  };
+
+  glyph.addEventListener('click', (e) => { e.stopPropagation(); openEvent(); });
+  banner.addEventListener('click', (e) => { e.stopPropagation(); openEvent(); });
+  close.addEventListener('click', (e) => { e.stopPropagation(); dismiss(); });
+
+  const autoTimer = setTimeout(dismiss, AUTO_DISMISS_MS);
+
+  el.addEventListener('animationend', (ev) => {
+    // Only the exit animation removes the element; entry just settles into resting position.
+    if ((ev as AnimationEvent).animationName === 'exit') {
+      el.remove();
+      const idx = planes.indexOf(el);
+      if (idx >= 0) planes.splice(idx, 1);
+      window.overlay.releaseLane(p.lane);
+    }
   });
 
   lanesEl.appendChild(el);

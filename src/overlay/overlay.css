@@ -2,7 +2,8 @@
   --lane-top: 32px;
   --lane-spacing: 80px;
   --plane-height: 60px;
-  --animation-duration: 10s;
+  --entry-duration: 3s;
+  --exit-duration: 0.4s;
 }
 
 html, body {
@@ -19,18 +20,28 @@ html, body {
 
 .plane {
   position: absolute;
+  left: 24px;
   height: var(--plane-height);
   display: flex;
   align-items: center;
   white-space: nowrap;
   pointer-events: auto;
-  animation: fly var(--animation-duration) linear forwards;
-  will-change: transform;
-  cursor: pointer;
+  animation: entry var(--entry-duration) cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  will-change: transform, opacity;
   user-select: none;
 }
 
-.plane .glyph { font-size: 48px; line-height: 1; margin-right: 10px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35)); }
+.plane.exit {
+  animation: exit var(--exit-duration) ease-in forwards;
+}
+
+.plane .glyph {
+  font-size: 48px;
+  line-height: 1;
+  margin-right: 10px;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+  cursor: pointer;
+}
 
 .plane .banner {
   background: var(--color);
@@ -39,6 +50,7 @@ html, body {
   border-radius: 8px;
   font: 600 17px/1.1 -apple-system, BlinkMacSystemFont, sans-serif;
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  cursor: pointer;
 }
 
 .plane .banner .acct {
@@ -48,7 +60,32 @@ html, body {
   font-size: 14px;
 }
 
-@keyframes fly {
-  from { transform: translateX(-360px); }
-  to   { transform: translateX(calc(100vw + 80px)); }
+.plane .close {
+  width: 26px;
+  height: 26px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font: 600 16px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: background 0.15s ease;
+}
+
+.plane .close:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+@keyframes entry {
+  from { transform: translateX(calc(100vw - 24px)); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes exit {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-60px); }
 }

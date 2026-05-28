@@ -22,7 +22,9 @@ import type { Config, NormalizedEvent } from './types';
 
 const CONFIG_PATH = join(app.getPath('userData'), 'config.json');
 const SYNC_INTERVAL_MS = 5 * 60_000;
-const ANIMATION_MS = 10000;
+// Upper bound for lane hold time = 30s auto-dismiss + ~3s entry animation + 0.5s exit + buffer.
+// Lanes are normally released explicitly by the overlay via `releaseLane` IPC; this is the safety fallback.
+const ANIMATION_MS = 35000;
 const MAX_LANES = 5;
 
 let config: Config;
@@ -132,6 +134,7 @@ async function init(): Promise<void> {
       });
     },
     setOverlayMouseCapture: (capture) => overlay?.setIgnoreMouseEvents(!capture, { forward: true }),
+    releaseLane: (lane) => lanes.release(lane),
     openExternal: async (url) => {
       // Gate to Google URLs (defense in depth)
       try {
