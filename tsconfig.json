@@ -12,5 +12,5 @@
     "lib": ["ES2022", "DOM"],
     "types": ["vite/client"]
   },
-  "include": ["src/settings/**/*", "src/overlay/**/*", "src/preload/**/*"]
+  "include": ["src/settings/**/*", "src/overlay/**/*"]
 }
