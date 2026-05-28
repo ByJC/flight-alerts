@@ -5,9 +5,10 @@ import { logger } from './logger';
 
 const ConfigSchema = z.object({
   delayMinutes: z.number().int().positive(),
-  // Optional in the parsed JSON so configs written before this field existed still load cleanly;
-  // resolved to a Config (required) by the Zod default.
+  // Optional in the parsed JSON so configs written before these fields existed still load cleanly;
+  // resolved to a Config (required) by the Zod defaults.
   dismissSeconds: z.number().int().positive().default(20),
+  planeSize: z.enum(['small', 'medium', 'large']).default('medium'),
   autostart: z.boolean(),
   accounts: z.array(
     z.object({
@@ -21,6 +22,7 @@ const ConfigSchema = z.object({
 export const DEFAULT_CONFIG: Config = {
   delayMinutes: 5,
   dismissSeconds: 20,
+  planeSize: 'medium',
   autostart: true,
   accounts: [],
 };

@@ -14,7 +14,7 @@ function escapeHtml(s: string): string {
 
 function spawnPlane(p: PlaneSpawnPayload): void {
   const el = document.createElement('div');
-  el.className = 'plane';
+  el.className = `plane size-${p.size}`;
   el.style.top = `calc(var(--lane-top) + ${p.lane} * var(--lane-spacing))`;
   el.style.setProperty('--color', p.color);
 

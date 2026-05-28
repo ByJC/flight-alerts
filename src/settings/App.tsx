@@ -77,6 +77,17 @@ export function App() {
           </select>
         </label>
         <label>
+          Plane size{' '}
+          <select
+            value={config.planeSize}
+            onChange={(e) => update({ ...config, planeSize: e.target.value as 'small' | 'medium' | 'large' })}
+          >
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </label>
+        <label>
           <input
             type="checkbox"
             checked={config.autostart}

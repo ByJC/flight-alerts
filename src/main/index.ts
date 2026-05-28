@@ -62,6 +62,7 @@ function spawnPlane(event: NormalizedEvent): void {
     htmlLink: event.htmlLink,
     lane,
     dismissMs: config.dismissSeconds * 1000,
+    size: config.planeSize,
   });
   if (delayMs > 0) setTimeout(send, delayMs); else send();
 }

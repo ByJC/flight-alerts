@@ -1,7 +1,5 @@
 :root {
   --lane-top: 32px;
-  --lane-spacing: 80px;
-  --plane-height: 60px;
   --animation-duration: 10s;
 }
 
@@ -17,7 +15,18 @@ html, body {
 
 #lanes { position: absolute; inset: 0; pointer-events: none; }
 
+/* Default (medium) — overridden by .size-small / .size-large on the plane element. */
 .plane {
+  --plane-height: 60px;
+  --glyph-size: 48px;
+  --banner-pad-y: 10px;
+  --banner-pad-x: 18px;
+  --banner-font: 17px;
+  --acct-font: 14px;
+  --close-size: 26px;
+  --close-font: 16px;
+  --lane-spacing: 80px;
+
   position: absolute;
   /* Anchored against the right edge; the `fly` animation slides it in from
      off-screen left and rests it here once it lands. */
@@ -32,8 +41,32 @@ html, body {
   user-select: none;
 }
 
+.plane.size-small {
+  --plane-height: 44px;
+  --glyph-size: 32px;
+  --banner-pad-y: 6px;
+  --banner-pad-x: 14px;
+  --banner-font: 13px;
+  --acct-font: 11px;
+  --close-size: 20px;
+  --close-font: 13px;
+  --lane-spacing: 60px;
+}
+
+.plane.size-large {
+  --plane-height: 84px;
+  --glyph-size: 64px;
+  --banner-pad-y: 14px;
+  --banner-pad-x: 24px;
+  --banner-font: 22px;
+  --acct-font: 17px;
+  --close-size: 32px;
+  --close-font: 20px;
+  --lane-spacing: 104px;
+}
+
 .plane .glyph {
-  font-size: 48px;
+  font-size: var(--glyph-size);
   line-height: 1;
   margin-right: 10px;
   filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
@@ -43,9 +76,9 @@ html, body {
 .plane .banner {
   background: var(--color);
   color: #111;
-  padding: 10px 18px;
+  padding: var(--banner-pad-y) var(--banner-pad-x);
   border-radius: 8px;
-  font: 600 17px/1.1 -apple-system, BlinkMacSystemFont, sans-serif;
+  font: 600 var(--banner-font)/1.1 -apple-system, BlinkMacSystemFont, sans-serif;
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
   cursor: pointer;
 }
@@ -54,17 +87,17 @@ html, body {
   font-weight: 400;
   opacity: 0.75;
   margin-left: 10px;
-  font-size: 14px;
+  font-size: var(--acct-font);
 }
 
 .plane .close {
-  width: 26px;
-  height: 26px;
+  width: var(--close-size);
+  height: var(--close-size);
   margin-left: 8px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.45);
   color: #fff;
-  font: 600 16px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  font: 600 var(--close-font)/1 -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;

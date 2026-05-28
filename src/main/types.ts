@@ -6,9 +6,12 @@ export interface AccountConfig {
   enabled: boolean;
 }
 
+export type PlaneSize = 'small' | 'medium' | 'large';
+
 export interface Config {
   delayMinutes: number;
   dismissSeconds: number; // upper bound on how long a plane stays visible (acts as safety + future hover-pause)
+  planeSize: PlaneSize;
   autostart: boolean;
   accounts: AccountConfig[];
 }
@@ -31,6 +34,7 @@ export interface PlaneSpawnPayload {
   htmlLink: string;
   lane: number;
   dismissMs: number;
+  size: PlaneSize;
 }
 
 export interface OAuthTokens {
