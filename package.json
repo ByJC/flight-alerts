@@ -1,6 +1,6 @@
 {
   "name": "flight-alerts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Personal macOS app that flies planes across the screen 5 min before each Google Calendar event",
   "main": "out/main/index.js",
