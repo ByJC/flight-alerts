@@ -20,7 +20,7 @@ export async function fileToIconDataUri(file: File, maxSide = 128): Promise<stri
     i.src = dataUrl;
   });
 
-  const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+  const scale = Math.min(1, maxSide / Math.max(1, img.width, img.height));
   const w = Math.max(1, Math.round(img.width * scale));
   const h = Math.max(1, Math.round(img.height * scale));
 

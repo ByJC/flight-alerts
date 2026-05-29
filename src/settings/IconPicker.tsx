@@ -27,7 +27,7 @@ export function IconPicker({ value, onChange }: { value: AccountIcon; onChange: 
 
   return (
     <div style={{ position: 'relative' }}>
-      <button type="button" className="icon-trigger" onClick={() => setOpen((o) => !o)} aria-label="Choose icon">
+      <button type="button" className="icon-trigger" onClick={() => { if (!open) setError(null); setOpen((o) => !o); }} aria-label="Choose icon">
         {value.type === 'image' ? <img src={value.value} alt="" /> : <span>{value.value}</span>}
       </button>
       {open && (
