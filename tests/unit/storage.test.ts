@@ -71,6 +71,12 @@ describe('storage', () => {
     expect(existsSync(path + '.bak')).toBe(true);
   });
 
+  it('round-trips an account with a multi-codepoint (ZWJ) emoji icon', () => {
+    const cfg = { delayMinutes: 5, dismissSeconds: 20, planeSize: 'medium' as const, autostart: true, accounts: [{ email: 'a@b.com', color: '#00ff00', icon: { type: 'emoji' as const, value: '👨‍👩‍👧‍👦' }, enabled: true }] };
+    saveConfig(path, cfg);
+    expect(loadConfig(path)).toEqual(cfg);
+  });
+
   it('writes atomically (no partial file on crash simulation)', () => {
     const cfg = { delayMinutes: 5, dismissSeconds: 20, planeSize: 'medium' as const, autostart: true, accounts: [] };
     saveConfig(path, cfg);

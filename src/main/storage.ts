@@ -17,7 +17,7 @@ const ConfigSchema = z.object({
       color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
       icon: z
         .discriminatedUnion('type', [
-          z.object({ type: z.literal('emoji'), value: z.string().min(1).max(8) }),
+          z.object({ type: z.literal('emoji'), value: z.string().min(1).max(32) }),
           z.object({ type: z.literal('image'), value: z.string().refine(isValidIconImage, 'invalid image data URI') }),
         ])
         .default(DEFAULT_ACCOUNT_ICON),
