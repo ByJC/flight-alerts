@@ -17,5 +17,6 @@ export function dataUriByteSize(uri: string): number {
 /** A storable icon image: png/jpeg/webp/svg base64 data URI within the size limit. */
 export function isValidIconImage(uri: string): boolean {
   return /^data:image\/(png|jpeg|webp|svg\+xml);base64,/.test(uri)
+    && dataUriByteSize(uri) > 0
     && dataUriByteSize(uri) <= MAX_ICON_BYTES;
 }

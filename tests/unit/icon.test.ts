@@ -9,9 +9,10 @@ describe('icon helpers', () => {
   });
 
   it('dataUriByteSize returns decoded byte length, not string length', () => {
-    const size = dataUriByteSize(tinyPng);
-    expect(size).toBeGreaterThan(0);
-    expect(size).toBeLessThan(tinyPng.length);
+    const b64 = tinyPng.slice(tinyPng.indexOf('base64,') + 'base64,'.length);
+    const expected = Buffer.from(b64, 'base64').length;
+    expect(dataUriByteSize(tinyPng)).toBe(expected);
+    expect(dataUriByteSize(tinyPng)).toBeLessThan(tinyPng.length);
   });
 
   it('dataUriByteSize falls back to string length when no base64 marker', () => {
@@ -29,5 +30,13 @@ describe('icon helpers', () => {
   it('rejects an image data URI over the size limit', () => {
     const huge = 'data:image/png;base64,' + 'A'.repeat(MAX_ICON_BYTES * 2);
     expect(isValidIconImage(huge)).toBe(false);
+  });
+
+  it('accepts a valid webp data URI', () => {
+    expect(isValidIconImage('data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==')).toBe(true);
+  });
+
+  it('rejects an image data URI with an empty payload', () => {
+    expect(isValidIconImage('data:image/png;base64,')).toBe(false);
   });
 });
