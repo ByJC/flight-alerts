@@ -3,6 +3,7 @@ import { mkdtempSync, rmSync, writeFileSync, readFileSync, existsSync } from 'no
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { loadConfig, saveConfig, DEFAULT_CONFIG } from '../../src/main/storage';
+import { DEFAULT_ACCOUNT_ICON } from '../../src/main/icon';
 
 let dir: string;
 let path: string;
@@ -23,9 +24,29 @@ describe('storage', () => {
   });
 
   it('round-trips a valid config', () => {
-    const cfg = { delayMinutes: 10, dismissSeconds: 30, planeSize: 'large' as const, autostart: false, accounts: [{ email: 'a@b.com', color: '#ff0000', enabled: true }] };
+    const cfg = { delayMinutes: 10, dismissSeconds: 30, planeSize: 'large' as const, autostart: false, accounts: [{ email: 'a@b.com', color: '#ff0000', icon: { type: 'emoji' as const, value: '🚀' }, enabled: true }] };
     saveConfig(path, cfg);
     expect(loadConfig(path)).toEqual(cfg);
+  });
+
+  it('round-trips an account with an image icon', () => {
+    const tinyPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC';
+    const cfg = { delayMinutes: 5, dismissSeconds: 20, planeSize: 'medium' as const, autostart: true, accounts: [{ email: 'a@b.com', color: '#ff0000', icon: { type: 'image' as const, value: tinyPng }, enabled: true }] };
+    saveConfig(path, cfg);
+    expect(loadConfig(path)).toEqual(cfg);
+  });
+
+  it('defaults a missing account icon to the plane emoji (backward-compat)', () => {
+    writeFileSync(path, JSON.stringify({ delayMinutes: 5, dismissSeconds: 20, planeSize: 'medium', autostart: true, accounts: [{ email: 'a@b.com', color: '#ff0000', enabled: true }] }));
+    const cfg = loadConfig(path);
+    expect(cfg.accounts[0]!.icon).toEqual(DEFAULT_ACCOUNT_ICON);
+  });
+
+  it('rejects an account whose image icon is not a valid image data URI', () => {
+    writeFileSync(path, JSON.stringify({ delayMinutes: 5, dismissSeconds: 20, planeSize: 'medium', autostart: true, accounts: [{ email: 'a@b.com', color: '#ff0000', icon: { type: 'image', value: 'data:text/plain;base64,aGk=' }, enabled: true }] }));
+    const cfg = loadConfig(path);
+    expect(cfg).toEqual(DEFAULT_CONFIG);
+    expect(existsSync(path + '.bak')).toBe(true);
   });
 
   it('applies defaults for newer fields when missing from file (forward-compat)', () => {
@@ -48,6 +69,12 @@ describe('storage', () => {
     const cfg = loadConfig(path);
     expect(cfg).toEqual(DEFAULT_CONFIG);
     expect(existsSync(path + '.bak')).toBe(true);
+  });
+
+  it('round-trips an account with a multi-codepoint (ZWJ) emoji icon', () => {
+    const cfg = { delayMinutes: 5, dismissSeconds: 20, planeSize: 'medium' as const, autostart: true, accounts: [{ email: 'a@b.com', color: '#00ff00', icon: { type: 'emoji' as const, value: '👨‍👩‍👧‍👦' }, enabled: true }] };
+    saveConfig(path, cfg);
+    expect(loadConfig(path)).toEqual(cfg);
   });
 
   it('writes atomically (no partial file on crash simulation)', () => {

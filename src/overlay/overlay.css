@@ -73,6 +73,12 @@ html, body {
   cursor: pointer;
 }
 
+.plane img.glyph {
+  width: var(--glyph-size);
+  height: var(--glyph-size);
+  object-fit: contain;
+}
+
 .plane .banner {
   background: var(--color);
   color: #111;

@@ -1,8 +1,13 @@
 export type AccountStatus = 'ok' | 'needs_reauth';
 
+export type AccountIcon =
+  | { type: 'emoji'; value: string }   // e.g. '✈️', '🚀'
+  | { type: 'image'; value: string };  // data URI, e.g. 'data:image/png;base64,...'
+
 export interface AccountConfig {
   email: string;
   color: string;
+  icon: AccountIcon;
   enabled: boolean;
 }
 
@@ -31,6 +36,7 @@ export interface PlaneSpawnPayload {
   startMs: number;
   accountEmail: string;
   color: string;
+  icon: AccountIcon;
   htmlLink: string;
   lane: number;
   dismissMs: number;
