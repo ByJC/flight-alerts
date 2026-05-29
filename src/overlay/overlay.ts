@@ -18,9 +18,17 @@ function spawnPlane(p: PlaneSpawnPayload): void {
   el.style.top = `calc(var(--lane-top) + ${p.lane} * var(--lane-spacing))`;
   el.style.setProperty('--color', p.color);
 
-  const glyph = document.createElement('span');
+  let glyph: HTMLElement;
+  if (p.icon.type === 'image') {
+    const img = document.createElement('img');
+    img.src = p.icon.value;
+    img.alt = '';
+    glyph = img;
+  } else {
+    glyph = document.createElement('span');
+    glyph.textContent = p.icon.value;
+  }
   glyph.className = 'glyph';
-  glyph.textContent = '✈️';
 
   const banner = document.createElement('span');
   banner.className = 'banner';
