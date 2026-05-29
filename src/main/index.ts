@@ -18,7 +18,8 @@ import { LaneAllocator } from './lane-allocator';
 import { createOverlayWindow, createSettingsWindow } from './windows';
 import { createTray } from './tray';
 import { registerIpc, sendPlaneSpawn } from './ipc';
-import type { Config, NormalizedEvent } from './types';
+import type { AccountIcon, Config, NormalizedEvent } from './types';
+import { DEFAULT_ACCOUNT_ICON } from './icon';
 
 const CONFIG_PATH = join(app.getPath('userData'), 'config.json');
 const SYNC_INTERVAL_MS = 5 * 60_000;
@@ -49,6 +50,10 @@ function colorFor(email: string): string {
   return config.accounts.find((a) => a.email === email)?.color ?? '#888888';
 }
 
+function iconFor(email: string): AccountIcon {
+  return config.accounts.find((a) => a.email === email)?.icon ?? DEFAULT_ACCOUNT_ICON;
+}
+
 function spawnPlane(event: NormalizedEvent): void {
   if (paused) return;
   if (!overlay) return;
@@ -59,6 +64,7 @@ function spawnPlane(event: NormalizedEvent): void {
     startMs: event.startMs,
     accountEmail: event.accountEmail,
     color: colorFor(event.accountEmail),
+    icon: iconFor(event.accountEmail),
     htmlLink: event.htmlLink,
     lane,
     dismissMs: config.dismissSeconds * 1000,
@@ -113,7 +119,7 @@ async function init(): Promise<void> {
     addAccount: async () => {
       const { email } = await accountManager.addAccount();
       if (!config.accounts.some((a) => a.email === email)) {
-        config.accounts.push({ email, color: pickNextColor(config.accounts), enabled: true });
+        config.accounts.push({ email, color: pickNextColor(config.accounts), icon: DEFAULT_ACCOUNT_ICON, enabled: true });
         saveConfig(CONFIG_PATH, config);
       }
       syncOnce();
